@@ -1,7 +1,9 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const cookieParser = require('cookie-parser');
 const app = express();
+app.use(cookieParser());
 
 dotenv.config({ path: "./config.env" });
 require("./db/conn");
@@ -16,10 +18,7 @@ const User = require('./model/userSchema')
 
 // Midleware
 
-const middleware = (req, res, next) => {
-  console.log("middleware activated");
-  next();
-};
+
 
 app.get("/", (req, res) => {
   res.send(`
@@ -32,20 +31,7 @@ app.get("/", (req, res) => {
     <a href = "/register">Register</a>
     `);
 });
-app.get("/about", middleware, (req, res) => {
-  res.send(
-    `
-    <h1>This is About</h1>
-    <div style = "display: flex; flex-direction: column;">
-    <a href = "/">Home</a>
-    <a href = "/about" style="text-decoration: none; font-size: 1.5rem; color: black;">About</a>
-    <a href = "/contact">Contact</a>
-    <a href = "/login">Login</a>
-    <a href = "/register">Register</a>
-    `
-  );
-  // next()
-});
+
 app.get("/contact", (req, res) => {
   res.send(
     `

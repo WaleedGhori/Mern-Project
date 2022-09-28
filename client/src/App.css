@@ -622,6 +622,7 @@ label.valid:after {
 .profile-head .nav-tabs .nav-link {
   font-weight: 600;
   border: none;
+  cursor: pointer;
 }
 .profile-head .nav-tabs .nav-link.active {
   border: none;
@@ -664,6 +665,14 @@ label.valid:after {
 @media screen and (min-width: 1024px) {
   .container {
     max-width: 1200px;
+  }
+}
+
+@media only screen and (max-width: 993px){
+
+  .input_field {
+    width: 100% !important;
+    margin-bottom: 30px;
   }
 }
 
@@ -839,11 +848,10 @@ label.valid:after {
 }
 
 .contact_form {
-  padding-top: 85px;
+  padding-top: 30px;
 }
 
-.contact_form_container {
-}
+
 
 .contact_form_title {
   font-size: 30px;

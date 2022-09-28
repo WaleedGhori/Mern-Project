@@ -1,6 +1,36 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 
 const Contact = () => {
+
+  const [userData, setUserData] = useState({});
+
+  const callContactPage = async () => {
+    try {
+      const res = await fetch("/getData", {
+        method:"GET",
+        headers:{
+          "Content-Type": "application/json",
+        }
+      });
+
+      const data = await res.json();
+      setUserData(data);
+
+      if (!res.status===200) {
+        const error = new Error(res.error);
+        throw error;
+      }
+
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    callContactPage();
+  }, []);
+
   return (
     <>
       <div className="contact-info">
@@ -14,7 +44,7 @@ const Contact = () => {
                 />
                 <div className="contact_info_content">
                   <div className="contact_info_title">Phone</div>
-                  <div className="contact_info_text">+92 348 0296567</div>
+                  <div className="contact_info_text">{userData.phone}</div>
                 </div>
               </div>
 
@@ -25,7 +55,7 @@ const Contact = () => {
                 />
                 <div className="contact_info_content">
                   <div className="contact_info_title">Email</div>
-                  <div className="contact_info_text">safdarse063@gmail</div>
+                  <div className="contact_info_text">{userData.email}</div>
                 </div>
               </div>
 
@@ -57,6 +87,7 @@ const Contact = () => {
                         id="contact_form_name"
                         className="contact_form_name input_field"
                         placeholder="Your Name"
+                        value={userData.name}
                         required="true"
                       />
 
@@ -65,6 +96,7 @@ const Contact = () => {
                         id="contact_form_email"
                         className="contact_form_email input_field"
                         placeholder="Your Email"
+                        value={userData.email}
                         required="true"
                       />
 
@@ -73,6 +105,7 @@ const Contact = () => {
                         id="contact_form_phone"
                         className="contact_form_phone input_field"
                         placeholder="Your Phone Number"
+                        value={userData.phone}
                         required="true"
                       />
                     </div>

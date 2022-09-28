@@ -3,6 +3,7 @@ const { findOne } = require("../model/userSchema");
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+const authenticate = require("../middleware/authenticate");
 
 require("../db/conn");
 const User = require("../model/userSchema");
@@ -50,15 +51,14 @@ router.post("/login", async (req, res) => {
     if (userExist) {
       const isMatchPassword = await bcrypt.compare(password, userExist.password);
       token = await userExist.generateAuthToken();
-      console.log(token);
-      res.cookie("jwttoken", {
-        expires: new Date(Date.now()+86,400),
+      res.cookie("jwttoken", token, {
+        expires: new Date(Date.now()+(1*24*3600000)),
         httpOnly:true,
       })
       if (!isMatchPassword) {
         return res.status(400).json({ message: "invalid crendationals" });
       } else {
-        return res.status(400).json({ message: "Login sucessfuly..." });
+        return res.status(200).json({ message: "Login sucessfuly..." });
       }
     } else{
       return res.status(400).json({ message: "invalid crendationals" });
@@ -69,6 +69,16 @@ router.post("/login", async (req, res) => {
     console.log(error);
   }
 });
+
+// About us Page
+
+router.get('/about', authenticate, (req, res)=>{
+  res.send(req.rootUser);
+})
+
+router.get('/getData', authenticate, (req, res)=>{
+  res.send(req.rootUser);
+})
 
 // Using Promise
 // router.post("/register", (req, res) => {
