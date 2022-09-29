@@ -10,9 +10,10 @@ require("./db/conn");
 app.use(express.json());
 
 // we link the router files to make our route easy
+// we link the router files to make our route easy
 app.use(require("./router/auth"));
 
-const port = process.env.PORT;
+const port = process.env.PORT || 8000;
 
 const User = require('./model/userSchema')
 
@@ -20,45 +21,45 @@ const User = require('./model/userSchema')
 
 
 
-app.get("/", (req, res) => {
-  res.send(`
-    <h1>This is Home</h1>
-    <div style = "display: flex; flex-direction: column;">
-    <a href = "/" style="text-decoration: none; font-size: 1.5rem; color: black;">Home</a>
-    <a href = "/about">About</a>
-    <a href = "/contact">Contact</a>
-    <a href = "/login">Login</a>
-    <a href = "/register">Register</a>
-    `);
-});
+// app.get("/", (req, res) => {
+//   res.send(`
+//     <h1>This is Home</h1>
+//     <div style = "display: flex; flex-direction: column;">
+//     <a href = "/" style="text-decoration: none; font-size: 1.5rem; color: black;">Home</a>
+//     <a href = "/about">About</a>
+//     <a href = "/contact">Contact</a>
+//     <a href = "/login">Login</a>
+//     <a href = "/register">Register</a>
+//     `);
+// });
 
-app.get("/contact", (req, res) => {
-  res.send(
-    `
-    <h1>This is Contact</h1>
-    <div style = "display: flex; flex-direction: column;">
-    <a href = "/">Home</a>
-    <a href = "/about">About</a>
-    <a href = "/contact" style="text-decoration: none; font-size: 1.5rem; color: black;">Contact</a>
-    <a href = "/login">Login</a>
-    <a href = "/register">Register</a>
-    `
-  );
-});
-app.get("/login", (req, res) => {
-  res.cookie('name', 'safdar');
-  res.send(
-    `
-    <h1>This is Login</h1>
-    <div style = "display: flex; flex-direction: column;">
-    <a href = "/">Home</a>
-    <a href = "/about">About</a>
-    <a href = "/contact">Contact</a>
-    <a href = "/login" style="text-decoration: none; font-size: 1.5rem; color: black;">Login</a>
-    <a href = "/register">Register</a>
-    `
-  );
-});
+// app.get("/contact", (req, res) => {
+//   res.send(
+//     `
+//     <h1>This is Contact</h1>
+//     <div style = "display: flex; flex-direction: column;">
+//     <a href = "/">Home</a>
+//     <a href = "/about">About</a>
+//     <a href = "/contact" style="text-decoration: none; font-size: 1.5rem; color: black;">Contact</a>
+//     <a href = "/login">Login</a>
+//     <a href = "/register">Register</a>
+//     `
+//   );
+// });
+// app.get("/login", (req, res) => {
+//   res.cookie('name', 'safdar');
+//   res.send(
+//     `
+//     <h1>This is Login</h1>
+//     <div style = "display: flex; flex-direction: column;">
+//     <a href = "/">Home</a>
+//     <a href = "/about">About</a>
+//     <a href = "/contact">Contact</a>
+//     <a href = "/login" style="text-decoration: none; font-size: 1.5rem; color: black;">Login</a>
+//     <a href = "/register">Register</a>
+//     `
+//   );
+// });
 // app.get("/register", (req, res) => {
 //   res.send(
 //     `
@@ -73,7 +74,9 @@ app.get("/login", (req, res) => {
 //   );
 // });
 
-console.log("subscribes to our chanele");
+if (process.env.NODE_ENV == "production") {
+  app.use(express.static("client/build"));
+}
 
 app.listen(port, () => {
   console.log(`server running at http://localhost:${port}`);

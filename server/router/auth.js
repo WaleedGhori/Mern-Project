@@ -1,6 +1,6 @@
 const express = require("express");
 const { findOne } = require("../model/userSchema");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const authenticate = require("../middleware/authenticate");
@@ -8,9 +8,9 @@ const authenticate = require("../middleware/authenticate");
 require("../db/conn");
 const User = require("../model/userSchema");
 
-router.get("/", (req, res) => {
-  res.send(`Hello world from the server router js`);
-});
+// router.get("/", (req, res) => {
+//   res.send(`Hello world from the server router js`);
+// });
 
 // Registeration Router
 router.post("/register", async (req, res) => {
@@ -47,24 +47,25 @@ router.post("/login", async (req, res) => {
       res.status(400).json({ message: "Fill complete field" });
 
     const userExist = await User.findOne({ email: email });
-    
+
     if (userExist) {
-      const isMatchPassword = await bcrypt.compare(password, userExist.password);
+      const isMatchPassword = await bcrypt.compare(
+        password,
+        userExist.password
+      );
       token = await userExist.generateAuthToken();
       res.cookie("jwttoken", token, {
-        expires: new Date(Date.now()+(1*24*3600000)),
-        httpOnly:true,
-      })
+        expires: new Date(Date.now() + 1 * 24 * 3600000),
+        httpOnly: true,
+      });
       if (!isMatchPassword) {
         return res.status(400).json({ message: "invalid crendationals" });
       } else {
         return res.status(200).json({ message: "Login sucessfuly..." });
       }
-    } else{
+    } else {
       return res.status(400).json({ message: "invalid crendationals" });
     }
-
-    
   } catch (error) {
     console.log(error);
   }
@@ -72,13 +73,47 @@ router.post("/login", async (req, res) => {
 
 // About us Page
 
-router.get('/about', authenticate, (req, res)=>{
+router.get("/about", authenticate, (req, res) => {
   res.send(req.rootUser);
-})
+});
 
-router.get('/getData', authenticate, (req, res)=>{
+router.get("/getData", authenticate, (req, res) => {
   res.send(req.rootUser);
-})
+});
+
+// Contact Page
+
+router.post("/contact", authenticate, async (req, res) => {
+  try {
+    const { name, email, phone, message } = req.body;
+
+    if (!name || !email || !phone || !message) {
+      console.log("error in contact form");
+      return res.json({ error: "please filled the contact form" });
+    }
+    const userContact = await User.findOne({ _id: req.userID });
+
+    if (userContact) {
+      const userMessage = await userContact.addMessage(
+        name,
+        email,
+        phone,
+        message
+      );
+      await userContact.save();
+      res.status(201).json({ Message: "user Contact successfully" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// Logout us Page
+
+router.get("/logout", (req, res) => {
+  res.clearCookie("jwttoken", {path:"/"})
+  res.status(200).send('User Logout');
+});
 
 // Using Promise
 // router.post("/register", (req, res) => {

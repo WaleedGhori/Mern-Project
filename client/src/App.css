@@ -319,7 +319,8 @@ input {
   display: block;
   border: none;
   border-bottom: 1px solid #999;
-  padding: 6px 30px;
+  padding: 6px 0px;
+  padding-left: 40px;
   font-family: "Poppins", sans-serif;
   box-sizing: border-box;
 }
@@ -795,7 +796,7 @@ label.valid:after {
 .home-page .home-div h1 {
   font-size: 60px;
   font-weight: 800;
-  text-transform: capitalize;
+  text-transform: uppercase;
   margin-bottom: 30px;
 }
 
